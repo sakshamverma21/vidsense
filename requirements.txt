@@ -1,0 +1,32 @@
+# VidSense — RUNTIME dependencies for the FastAPI app + agent + eval runner.
+# This is what the Docker image installs. Dev-only extras (Streamlit UI, eval
+# report charts, legacy BERT single-video app) live in requirements-dev.txt.
+#
+# Deliberately excludes torch / transformers / scikit-learn / matplotlib: the
+# agent code path (api.py -> vidsense/*) never imports them, so keeping them out
+# shrinks the image from ~2 GB to a few hundred MB.
+
+# --- Web app / API ----------------------------------------------------------
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+sse-starlette>=2.0.0
+python-dotenv>=1.0.0
+
+# --- LLM + orchestration ----------------------------------------------------
+langchain>=1.0.0
+langchain-core>=1.0.0
+langchain-community>=0.4.0
+langchain-google-genai>=2.0.0   # Gemini (default provider)
+langchain-groq>=1.0.0           # Groq (alternative provider)
+langgraph>=1.0.0                # StateGraph research agent
+tenacity>=8.2.0
+
+# --- Retrieval / embeddings -------------------------------------------------
+youtube-transcript-api>=1.2.0
+yt-dlp>=2025.1.15                 # public playlist enumeration + source titles
+faiss-cpu>=1.7.4
+fastembed>=0.2.0                # ONNX-based embeddings (no torch)
+numpy>=1.24.0
+
+# --- Tools ------------------------------------------------------------------
+langchain-tavily>=0.1.0         # external_verify web-search tool

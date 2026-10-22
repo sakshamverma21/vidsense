@@ -1,0 +1,17 @@
+# Dev / offline extras — install on top of the runtime requirements:
+#   pip install -r requirements-dev.txt
+-r requirements.txt
+
+streamlit>=1.51.0          # alternative built-in UI  (streamlit run app.py)
+matplotlib>=3.7.0          # eval report charts       (python -m vidsense.eval.report)
+
+# Legacy single-video app (youtube_rag_system.py — BERT topic clustering). Optional;
+# not used by the agent, the FastAPI app, or the eval harness.
+torch>=2.0.0
+transformers>=4.35.0
+scikit-learn>=1.3.0
+langchain-ollama>=0.0.1    # optional local LLM backend
+
+# Tests for source resolution, corpus sessions, and API contracts.
+pytest>=8.0.0
+httpx>=0.27.0

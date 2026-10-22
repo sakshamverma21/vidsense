@@ -1,0 +1,39 @@
+# Virtual envs & caches (huge / machine-specific)
+venv/
+.venv/
+env/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Secrets — injected at runtime as env vars, never baked into the image
+.env
+.env.*
+!.env.example
+
+# VCS / editor / tooling
+.git/
+.gitignore
+.claude/
+.streamlit/
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+
+# Legacy single-video app (needs torch/transformers, excluded from the slim image)
+youtube_rag_system.py
+app.py
+
+# The FastEmbed model is (re)downloaded cleanly during the Linux build's warmup
+# step, so don't ship the local (possibly Windows-partial) copy.
+.vidsense_cache/*
+!.vidsense_cache/.gitkeep
+!.vidsense_cache/dl-series-*/
+
+# Only the starter collection is eligible for inclusion in a deployment image;
+# customer collections and local model caches remain outside the build context.
+# .gitkeep allows a fresh checkout to build before a starter cache is generated.
+# Eval run output is local developer data and is not included in the image.
+vidsense/eval/runs/

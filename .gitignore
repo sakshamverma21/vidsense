@@ -1,0 +1,36 @@
+# --- Secrets ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Virtual envs -----------------------------------------------------------
+venv/
+.venv/
+env/
+
+# --- VidSense caches & eval artifacts --------------------------------------
+.vidsense_cache/*
+!.vidsense_cache/.gitkeep
+vidsense/eval/runs/
+*.faiss
+
+# --- Local tooling ----------------------------------------------------------
+.claude/
+.codex/
+node_modules/
+*.log
+
+# --- OS ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db

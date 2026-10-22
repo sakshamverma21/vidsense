@@ -1,0 +1,12 @@
+{
+  "name": "dl-series",
+  "description": "3Blue1Brown's Neural Networks / Deep Learning series — a coherent, progressively-building technical corpus with reliable English captions. Ideal for single-video lookup and cross-video comparison tasks.",
+  "videos": [
+    {"id": "aircAruvnKk", "title": "But what is a neural network? (Ch.1)"},
+    {"id": "IHZwWFHWa-w", "title": "Gradient descent, how neural networks learn (Ch.2)"},
+    {"id": "Ilg3gGewQ5U", "title": "What is backpropagation really doing? (Ch.3)"},
+    {"id": "tIeHLnjs5U8", "title": "Backpropagation calculus (Ch.4)"},
+    {"id": "wjZofJX0v4M", "title": "But what is a GPT? Transformers explained (Ch.5)"},
+    {"id": "eMlx5fFNoYc", "title": "Attention in transformers, visually explained (Ch.6)"}
+  ]
+}

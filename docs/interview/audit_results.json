@@ -1,0 +1,751 @@
+{
+  "audit_date": "2026-10-04",
+  "network_calls": "disabled",
+  "source_root": "C:\\Users\\saksh\\OneDrive\\Desktop\\vidsense-gpt",
+  "historical_runs": [
+    {
+      "file": "run_20260728_184027.json",
+      "num_tasks": 3,
+      "model": "llama-3.3-70b-versatile",
+      "judge_model": "llama-3.3-70b-versatile",
+      "tavily_enabled": false,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.3333,
+          "avg_cost_usd": 0.0031,
+          "total_cost_usd": 0.00915,
+          "avg_latency_s": 8.072,
+          "avg_tokens": 5053.6667,
+          "avg_tool_calls": 2,
+          "avg_tool_f1": 0.8333,
+          "avg_tool_coverage": 1.0,
+          "tool_exact_set_rate": 0.6667,
+          "avg_trajectory_quality": 0.6667,
+          "avg_grounded_ratio": 1.0
+        },
+        "baseline": {
+          "task_success_rate": 0.8333,
+          "avg_cost_usd": 0.0005,
+          "total_cost_usd": 0.001543,
+          "avg_latency_s": 2.3233,
+          "avg_tokens": 814.6667,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "incorrect": 1,
+            "partial": 2
+          },
+          "scored_tasks": 3,
+          "mean_success_recomputed": 0.3333333333333333,
+          "mean_cost_unrounded": 0.00305,
+          "cost_table_has_model": true,
+          "success_by_type": {
+            "single": 0.3333333333333333
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 2,
+            "partial": 1
+          },
+          "scored_tasks": 3,
+          "mean_success_recomputed": 0.8333333333333334,
+          "mean_cost_unrounded": 0.0005143333333333333,
+          "cost_table_has_model": true,
+          "success_by_type": {
+            "single": 0.8333333333333334
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260728_185022.json",
+      "num_tasks": 13,
+      "model": "llama-3.3-70b-versatile",
+      "judge_model": "llama-3.3-70b-versatile",
+      "tavily_enabled": false,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.5,
+          "avg_cost_usd": 0.0036,
+          "total_cost_usd": 0.025198,
+          "avg_latency_s": 22.8027,
+          "avg_tokens": 5987,
+          "avg_tool_calls": 2.4286,
+          "avg_tool_f1": 0.6669,
+          "avg_tool_coverage": 0.9286,
+          "tool_exact_set_rate": 0.1429,
+          "avg_trajectory_quality": 0.6071,
+          "avg_grounded_ratio": 0.9524
+        },
+        "baseline": {
+          "task_success_rate": 0.5625,
+          "avg_cost_usd": 0.0005,
+          "total_cost_usd": 0.004384,
+          "avg_latency_s": 9.3691,
+          "avg_tokens": 775.3333,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "incorrect": 2,
+            "partial": 3,
+            "correct": 2,
+            "engine_error": 6
+          },
+          "scored_tasks": 7,
+          "mean_success_recomputed": 0.5,
+          "mean_cost_unrounded": 0.003599714285714286,
+          "cost_table_has_model": true,
+          "success_by_type": {
+            "cross": null,
+            "single": 0.5
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 3,
+            "partial": 3,
+            "incorrect": 2,
+            "error": 1,
+            "engine_error": 4
+          },
+          "scored_tasks": 8,
+          "mean_success_recomputed": 0.5625,
+          "mean_cost_unrounded": 0.0004871111111111111,
+          "cost_table_has_model": true,
+          "success_by_type": {
+            "cross": 0.5,
+            "single": 0.5714285714285714
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260728_201544.json",
+      "num_tasks": 13,
+      "model": "gemini-3.6-flash",
+      "judge_model": "gemini-3.6-flash",
+      "tavily_enabled": false,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": null,
+          "avg_cost_usd": null,
+          "total_cost_usd": 0,
+          "avg_latency_s": null,
+          "avg_tokens": null,
+          "avg_tool_calls": null,
+          "avg_tool_f1": null,
+          "avg_tool_coverage": null,
+          "tool_exact_set_rate": null,
+          "avg_trajectory_quality": null,
+          "avg_grounded_ratio": null
+        },
+        "baseline": {
+          "task_success_rate": null,
+          "avg_cost_usd": 0.0008,
+          "total_cost_usd": 0.000751,
+          "avg_latency_s": 10.533,
+          "avg_tokens": 2345,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "engine_error": 13
+          },
+          "scored_tasks": 0,
+          "mean_success_recomputed": null,
+          "mean_cost_unrounded": null,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": null,
+            "single": null
+          }
+        },
+        "baseline": {
+          "labels": {
+            "engine_error": 12,
+            "error": 1
+          },
+          "scored_tasks": 0,
+          "mean_success_recomputed": null,
+          "mean_cost_unrounded": 0.000751,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": null,
+            "single": null
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260728_223748.json",
+      "num_tasks": 13,
+      "model": "gemini-3.5-flash-lite",
+      "judge_model": "gemini-3.5-flash-lite",
+      "tavily_enabled": false,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.8571,
+          "avg_cost_usd": 0.0015,
+          "total_cost_usd": 0.010605,
+          "avg_latency_s": 9.615,
+          "avg_tokens": 11530.2857,
+          "avg_tool_calls": 4.2857,
+          "avg_tool_f1": 0.5191,
+          "avg_tool_coverage": 0.8571,
+          "tool_exact_set_rate": 0.0,
+          "avg_trajectory_quality": 0.75,
+          "avg_grounded_ratio": 1.0
+        },
+        "baseline": {
+          "task_success_rate": 0.5556,
+          "avg_cost_usd": 0.0001,
+          "total_cost_usd": 0.001163,
+          "avg_latency_s": 1.4964,
+          "avg_tokens": 754.5,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "correct": 6,
+            "engine_error": 6,
+            "incorrect": 1
+          },
+          "scored_tasks": 7,
+          "mean_success_recomputed": 0.8571428571428571,
+          "mean_cost_unrounded": 0.001515,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 1.0,
+            "single": 0.6666666666666666
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 5,
+            "incorrect": 4,
+            "engine_error": 3,
+            "error": 1
+          },
+          "scored_tasks": 9,
+          "mean_success_recomputed": 0.5555555555555556,
+          "mean_cost_unrounded": 0.0001163,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.5,
+            "single": 0.6
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260728_225302.json",
+      "num_tasks": 13,
+      "model": "gemini-3.5-flash-lite",
+      "judge_model": "gemini-3.5-flash-lite",
+      "tavily_enabled": false,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.8077,
+          "avg_cost_usd": 0.0014,
+          "total_cost_usd": 0.018464,
+          "avg_latency_s": 36.8404,
+          "avg_tokens": 11315.7692,
+          "avg_tool_calls": 4.4615,
+          "avg_tool_f1": 0.4462,
+          "avg_tool_coverage": 0.7308,
+          "tool_exact_set_rate": 0.0,
+          "avg_trajectory_quality": 0.6538,
+          "avg_grounded_ratio": 1.0
+        },
+        "baseline": {
+          "task_success_rate": 0.5769,
+          "avg_cost_usd": 0.0001,
+          "total_cost_usd": 0.001476,
+          "avg_latency_s": 5.5921,
+          "avg_tokens": 740,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "correct": 10,
+            "partial": 1,
+            "incorrect": 2
+          },
+          "scored_tasks": 13,
+          "mean_success_recomputed": 0.8076923076923077,
+          "mean_cost_unrounded": 0.0014203076923076923,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.75,
+            "single": 0.8571428571428571
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 7,
+            "incorrect": 5,
+            "partial": 1
+          },
+          "scored_tasks": 13,
+          "mean_success_recomputed": 0.5769230769230769,
+          "mean_cost_unrounded": 0.00011353846153846154,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.5,
+            "single": 0.6428571428571429
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260730_011106.json",
+      "num_tasks": 16,
+      "model": "gemini-3.5-flash-lite",
+      "judge_model": "gemini-3.5-flash-lite",
+      "tavily_enabled": true,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.6562,
+          "avg_cost_usd": 0.0012,
+          "total_cost_usd": 0.019487,
+          "avg_latency_s": 34.5503,
+          "avg_tokens": 9530.75,
+          "avg_tool_calls": 3.75,
+          "avg_tool_f1": 0.5793,
+          "avg_tool_coverage": 0.8125,
+          "tool_exact_set_rate": 0.1875,
+          "avg_trajectory_quality": 0.6562,
+          "avg_grounded_ratio": 0.9375
+        },
+        "baseline": {
+          "task_success_rate": 0.5625,
+          "avg_cost_usd": 0.0001,
+          "total_cost_usd": 0.001718,
+          "avg_latency_s": 5.1867,
+          "avg_tokens": 728.875,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "correct": 10,
+            "incorrect": 5,
+            "partial": 1
+          },
+          "scored_tasks": 16,
+          "mean_success_recomputed": 0.65625,
+          "mean_cost_unrounded": 0.0012179375,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.75,
+            "verify": 0.0,
+            "single": 0.8571428571428571
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 8,
+            "partial": 2,
+            "incorrect": 6
+          },
+          "scored_tasks": 16,
+          "mean_success_recomputed": 0.5625,
+          "mean_cost_unrounded": 0.000107375,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.5833333333333334,
+            "verify": 0.3333333333333333,
+            "single": 0.6428571428571429
+          }
+        }
+      }
+    },
+    {
+      "file": "run_20260730_012915.json",
+      "num_tasks": 16,
+      "model": "gemini-3.5-flash-lite",
+      "judge_model": "gemini-3.5-flash-lite",
+      "tavily_enabled": true,
+      "aggregate": {
+        "agent": {
+          "task_success_rate": 0.9375,
+          "avg_cost_usd": 0.0012,
+          "total_cost_usd": 0.019763,
+          "avg_latency_s": 34.9091,
+          "avg_tokens": 9799.5,
+          "avg_tool_calls": 3.6875,
+          "avg_tool_f1": 0.5897,
+          "avg_tool_coverage": 0.8125,
+          "tool_exact_set_rate": 0.1875,
+          "avg_trajectory_quality": 0.6875,
+          "avg_grounded_ratio": 0.9427
+        },
+        "baseline": {
+          "task_success_rate": 0.5625,
+          "avg_cost_usd": 0.0001,
+          "total_cost_usd": 0.001675,
+          "avg_latency_s": 5.3469,
+          "avg_tokens": 721.875,
+          "avg_tool_calls": 0
+        }
+      },
+      "systems": {
+        "agent": {
+          "labels": {
+            "correct": 15,
+            "incorrect": 1
+          },
+          "scored_tasks": 16,
+          "mean_success_recomputed": 0.9375,
+          "mean_cost_unrounded": 0.0012351875,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.8333333333333334,
+            "verify": 1.0,
+            "single": 1.0
+          }
+        },
+        "baseline": {
+          "labels": {
+            "correct": 9,
+            "incorrect": 7
+          },
+          "scored_tasks": 16,
+          "mean_success_recomputed": 0.5625,
+          "mean_cost_unrounded": 0.0001046875,
+          "cost_table_has_model": false,
+          "success_by_type": {
+            "cross": 0.5,
+            "verify": 0.3333333333333333,
+            "single": 0.7142857142857143
+          }
+        }
+      }
+    }
+  ],
+  "graph_checks": {
+    "normal_usage": {
+      "input_tokens": 40,
+      "output_tokens": 20,
+      "total_tokens": 60,
+      "llm_calls": 4
+    },
+    "normal_steps": [
+      "plan",
+      "tool",
+      "plan",
+      "synthesize",
+      "verify"
+    ],
+    "stream_events": [
+      "step",
+      "step",
+      "step",
+      "step",
+      "answer",
+      "step",
+      "done"
+    ],
+    "stream_done_usage": {
+      "input_tokens": 40,
+      "output_tokens": 20,
+      "total_tokens": 60,
+      "llm_calls": 4
+    },
+    "stream_done_keys": [
+      "answer",
+      "citations",
+      "latency",
+      "usage",
+      "verification"
+    ],
+    "max_steps_6_planners": 6,
+    "max_steps_6_executed_tools": 5,
+    "nested_cross_compare_usage": {
+      "input_tokens": 40,
+      "output_tokens": 20,
+      "total_tokens": 60,
+      "llm_calls": 4
+    }
+  },
+  "parser_checks": {
+    "string_false_supported": {
+      "grounded_ratio": 1.0,
+      "claims": [
+        {
+          "claim": "This is a sufficiently long factual claim for the sentence splitter.",
+          "supported": true,
+          "reason": ""
+        }
+      ]
+    },
+    "non_json_verifier": {
+      "grounded_ratio": 0.0,
+      "claims": [
+        {
+          "claim": "This is a sufficiently long factual claim for the sentence splitter.",
+          "supported": false,
+          "reason": ""
+        }
+      ]
+    },
+    "short_answer_skips_verification": {
+      "grounded_ratio": null,
+      "claims": []
+    },
+    "boundary_position": {
+      "offset": 4,
+      "code_timestamp": 0.0,
+      "expected_timestamp": 10.0
+    }
+  },
+  "cache_checks": {
+    "index_type": "IndexFlatL2",
+    "dimensions": 384,
+    "vectors": 147,
+    "vector_bytes": 225792,
+    "vector_norm_sample": [
+      1.0,
+      1.0,
+      0.9999999403953552
+    ],
+    "videos": [
+      {
+        "id": "aircAruvnKk",
+        "title": "But what is a neural network? (Ch.1)",
+        "segments": 286,
+        "characters": 18430,
+        "duration_code_s": 1105.1,
+        "last_caption_end_s": 1105.6399999999999,
+        "chunks": 23,
+        "distinct_timestamps": 20,
+        "matched_chunk_starts": 23,
+        "max_drift_s": 198.46100000000013,
+        "mean_drift_s": 107.40165217391302
+      },
+      {
+        "id": "IHZwWFHWa-w",
+        "title": "Gradient descent, how neural networks learn (Ch.2)",
+        "segments": 306,
+        "characters": 20163,
+        "duration_code_s": 1210.12,
+        "last_caption_end_s": 1212.78,
+        "chunks": 25,
+        "distinct_timestamps": 22,
+        "matched_chunk_starts": 25,
+        "max_drift_s": 231.60000000000002,
+        "mean_drift_s": 118.95119999999999
+      },
+      {
+        "id": "Ilg3gGewQ5U",
+        "title": "What is backpropagation really doing? (Ch.3)",
+        "segments": 193,
+        "characters": 12746,
+        "duration_code_s": 744.687,
+        "last_caption_end_s": 747.1,
+        "chunks": 16,
+        "distinct_timestamps": 14,
+        "matched_chunk_starts": 16,
+        "max_drift_s": 134.61699999999996,
+        "mean_drift_s": 72.574
+      },
+      {
+        "id": "tIeHLnjs5U8",
+        "title": "Backpropagation calculus (Ch.4)",
+        "segments": 138,
+        "characters": 8973,
+        "duration_code_s": 578.395,
+        "last_caption_end_s": 582.74,
+        "chunks": 11,
+        "distinct_timestamps": 10,
+        "matched_chunk_starts": 11,
+        "max_drift_s": 110.01499999999999,
+        "mean_drift_s": 58.566363636363626
+      },
+      {
+        "id": "wjZofJX0v4M",
+        "title": "But what is a GPT? Transformers explained (Ch.5)",
+        "segments": 443,
+        "characters": 29115,
+        "duration_code_s": 1609.708,
+        "last_caption_end_s": 1612.41,
+        "chunks": 37,
+        "distinct_timestamps": 31,
+        "matched_chunk_starts": 37,
+        "max_drift_s": 317.847,
+        "mean_drift_s": 156.81229729729728
+      },
+      {
+        "id": "eMlx5fFNoYc",
+        "title": "Attention in transformers, visually explained (Ch.6)",
+        "segments": 423,
+        "characters": 27820,
+        "duration_code_s": 1564.96,
+        "last_caption_end_s": 1569.2,
+        "chunks": 35,
+        "distinct_timestamps": 29,
+        "matched_chunk_starts": 35,
+        "max_drift_s": 317.53999999999996,
+        "mean_drift_s": 153.94045714285713
+      }
+    ],
+    "max_drift_examples": [
+      {
+        "video_id": "wjZofJX0v4M",
+        "assigned_s": 1601.77,
+        "caption_start_s": 1283.923,
+        "drift_s": 317.847
+      },
+      {
+        "video_id": "eMlx5fFNoYc",
+        "assigned_s": 1564.96,
+        "caption_start_s": 1247.42,
+        "drift_s": 317.53999999999996
+      },
+      {
+        "video_id": "wjZofJX0v4M",
+        "assigned_s": 1546.53,
+        "caption_start_s": 1240.456,
+        "drift_s": 306.07400000000007
+      },
+      {
+        "video_id": "eMlx5fFNoYc",
+        "assigned_s": 1502.971,
+        "caption_start_s": 1205.04,
+        "drift_s": 297.93100000000004
+      },
+      {
+        "video_id": "wjZofJX0v4M",
+        "assigned_s": 1488.283,
+        "caption_start_s": 1194.51,
+        "drift_s": 293.7729999999999
+      }
+    ],
+    "filter_starvation_examples": [
+      {
+        "query": "chain rule",
+        "video_id": "IHZwWFHWa-w",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "chain rule",
+        "video_id": "wjZofJX0v4M",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "query key value",
+        "video_id": "IHZwWFHWa-w",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "query key value",
+        "video_id": "Ilg3gGewQ5U",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "query key value",
+        "video_id": "tIeHLnjs5U8",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "query key value",
+        "video_id": "wjZofJX0v4M",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "hidden layer attention",
+        "video_id": "Ilg3gGewQ5U",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "hidden layer attention",
+        "video_id": "tIeHLnjs5U8",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "hidden layer attention",
+        "video_id": "wjZofJX0v4M",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "gradient descent",
+        "video_id": "aircAruvnKk",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "gradient descent",
+        "video_id": "tIeHLnjs5U8",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "gradient descent",
+        "video_id": "wjZofJX0v4M",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "gradient descent",
+        "video_id": "eMlx5fFNoYc",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "input pixels",
+        "video_id": "Ilg3gGewQ5U",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "input pixels",
+        "video_id": "tIeHLnjs5U8",
+        "default_fetch_k_20_results": 1,
+        "fetch_all_results": 2
+      },
+      {
+        "query": "input pixels",
+        "video_id": "wjZofJX0v4M",
+        "default_fetch_k_20_results": 0,
+        "fetch_all_results": 2
+      }
+    ]
+  },
+  "packages": {
+    "fastapi": "0.141.1",
+    "langchain-core": "1.5.1",
+    "langchain-community": "0.4.1",
+    "langgraph": "1.0.3",
+    "langchain-google-genai": "4.3.2",
+    "langchain-groq": "1.0.1",
+    "fastembed": "0.7.3",
+    "faiss-cpu": "1.13.0",
+    "youtube-transcript-api": "1.2.3",
+    "yt-dlp": "2026.8.19",
+    "onnxruntime": "1.23.2"
+  },
+  "legacy_ollama_has_bind_tools": false
+}

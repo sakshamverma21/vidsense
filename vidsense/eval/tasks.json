@@ -1,0 +1,118 @@
+{
+  "corpus": "corpus.json",
+  "note": "Starter task set (16 tasks) over the dl-series corpus. Reference answers are grounded in the videos' actual content. Expand toward 25-40 for a stronger eval; the 'verify' tasks require TAVILY_API_KEY. author_tasks.py can draft more candidates from the transcripts for you to curate.",
+  "tasks": [
+    {
+      "id": "s1", "type": "single", "difficulty": "easy",
+      "question": "In the neural network introduction, how many neurons are in the input layer and why that number?",
+      "reference_answer": "784 input neurons — one for each pixel of a 28x28 grayscale image (28 * 28 = 784). Each holds the pixel's grayscale value as its activation.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["aircAruvnKk"]
+    },
+    {
+      "id": "s2", "type": "single", "difficulty": "easy",
+      "question": "What does each neuron 'hold' according to the first video?",
+      "reference_answer": "A number called its activation, between 0 and 1. For input neurons this represents the grayscale value of a pixel.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["aircAruvnKk"]
+    },
+    {
+      "id": "s3", "type": "single", "difficulty": "medium",
+      "question": "What is the cost function and what is it used for when training the network?",
+      "reference_answer": "The cost function measures how bad the network's output is versus the desired output (roughly the sum of squared differences across output neurons). Training works to minimize this cost.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["IHZwWFHWa-w"]
+    },
+    {
+      "id": "s4", "type": "single", "difficulty": "medium",
+      "question": "What technique does the second video describe for minimizing the cost?",
+      "reference_answer": "Gradient descent: compute the negative gradient of the cost function and repeatedly take small steps 'downhill' to reach a local minimum, which nudges the weights and biases.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["IHZwWFHWa-w"]
+    },
+    {
+      "id": "s5", "type": "single", "difficulty": "medium",
+      "question": "In the GPT video, what does a transformer fundamentally predict?",
+      "reference_answer": "The next token: a transformer outputs a probability distribution over possible next tokens, which is sampled repeatedly to generate text.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["wjZofJX0v4M"]
+    },
+    {
+      "id": "s6", "type": "single", "difficulty": "medium",
+      "question": "According to the attention video, what three vectors are central to the attention mechanism?",
+      "reference_answer": "Query, key, and value vectors. Queries and keys produce an attention pattern that determines how much each token's value contributes.",
+      "expected_tools": ["transcript_search"],
+      "gold_video_ids": ["eMlx5fFNoYc"]
+    },
+    {
+      "id": "s7", "type": "single", "difficulty": "hard",
+      "question": "Where in the backpropagation-calculus chapter is the chain rule discussed?",
+      "reference_answer": "That chapter is built around using the chain rule to compute the partial derivatives of the cost with respect to the weights and biases; it appears throughout as the core tool.",
+      "expected_tools": ["timestamp_lookup", "transcript_search"],
+      "gold_video_ids": ["tIeHLnjs5U8"]
+    },
+    {
+      "id": "c1", "type": "cross", "difficulty": "medium",
+      "question": "How do the gradient-descent chapter and the backpropagation chapter differ in what they explain about how the network learns?",
+      "reference_answer": "The gradient-descent chapter introduces the cost function and gradient descent — the WHAT of learning (minimizing cost). The backpropagation chapter explains the algorithm that computes that gradient efficiently — the HOW weights are nudged, layer by layer.",
+      "expected_tools": ["cross_video_compare"],
+      "gold_video_ids": ["IHZwWFHWa-w", "Ilg3gGewQ5U"]
+    },
+    {
+      "id": "c2", "type": "cross", "difficulty": "hard",
+      "question": "Compare how the series introduces plain neural networks versus transformers/GPT.",
+      "reference_answer": "The first chapter introduces a feedforward multilayer network for digit classification: neurons, layers, weights, biases, activations. The GPT chapter introduces transformers for language: tokens, embeddings, attention, and next-token prediction. Both are deep learning but differ in architecture and task.",
+      "expected_tools": ["cross_video_compare"],
+      "gold_video_ids": ["aircAruvnKk", "wjZofJX0v4M"]
+    },
+    {
+      "id": "c3", "type": "cross", "difficulty": "hard",
+      "question": "Across the series, what role does calculus / the chain rule play in training?",
+      "reference_answer": "The backpropagation intuition chapter explains conceptually how weights are nudged; the backpropagation-calculus chapter formalizes it with the chain rule and partial derivatives to compute the gradient of the cost.",
+      "expected_tools": ["cross_video_compare"],
+      "gold_video_ids": ["Ilg3gGewQ5U", "tIeHLnjs5U8"]
+    },
+    {
+      "id": "c4", "type": "cross", "difficulty": "medium",
+      "question": "Do both the neural-network chapters and the transformer chapters rely on learned weights? Compare.",
+      "reference_answer": "Yes. The MLP computes weighted sums of activations plus biases followed by a nonlinearity, all with learned weights. Transformers also use learned weight matrices — for embeddings and for the query/key/value projections in attention. Both learn their parameters via training.",
+      "expected_tools": ["cross_video_compare"],
+      "gold_video_ids": ["aircAruvnKk", "eMlx5fFNoYc"]
+    },
+    {
+      "id": "c5", "type": "cross", "difficulty": "hard",
+      "question": "Compare how attention processes information versus a plain hidden layer.",
+      "reference_answer": "A hidden layer applies a fixed learned weighted sum of the previous layer's activations. Attention instead computes weights dynamically: query-key similarity produces an attention pattern so tokens can selectively pull context from other tokens' values.",
+      "expected_tools": ["cross_video_compare"],
+      "gold_video_ids": ["aircAruvnKk", "eMlx5fFNoYc"]
+    },
+    {
+      "id": "c6", "type": "cross", "difficulty": "medium",
+      "question": "Which chapters discuss gradient descent, and how are they connected?",
+      "reference_answer": "The gradient-descent chapter introduces it alongside the cost function; the backpropagation intuition and calculus chapters explain how to actually compute that gradient (via backprop and the chain rule). Together they cover minimizing cost and how the gradient is obtained.",
+      "expected_tools": ["cross_video_compare", "transcript_search"],
+      "gold_video_ids": ["IHZwWFHWa-w", "Ilg3gGewQ5U", "tIeHLnjs5U8"]
+    },
+    {
+      "id": "v1", "type": "verify", "difficulty": "easy", "requires_tavily": true,
+      "question": "Verify the claim that a 28x28 pixel image contains 784 pixels.",
+      "reference_answer": "Correct: 28 * 28 = 784 pixels.",
+      "expected_tools": ["external_verify"],
+      "gold_video_ids": []
+    },
+    {
+      "id": "v2", "type": "verify", "difficulty": "medium", "requires_tavily": true,
+      "question": "Verify whether backpropagation was popularized by the 1986 paper by Rumelhart, Hinton, and Williams.",
+      "reference_answer": "Correct: the 1986 Nature paper 'Learning representations by back-propagating errors' by Rumelhart, Hinton, and Williams popularized backpropagation for training neural networks.",
+      "expected_tools": ["external_verify"],
+      "gold_video_ids": []
+    },
+    {
+      "id": "v3", "type": "verify", "difficulty": "easy", "requires_tavily": true,
+      "question": "Verify the claim that GPT stands for 'Generative Pre-trained Transformer'.",
+      "reference_answer": "Correct: GPT stands for Generative Pre-trained Transformer.",
+      "expected_tools": ["external_verify"],
+      "gold_video_ids": []
+    }
+  ]
+}

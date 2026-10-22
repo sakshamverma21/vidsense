@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ask, summarize, and find highlights across your YouTube video collection." />
+  <title>VidSense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <a href="/" class="brand" aria-label="VidSense home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>VidSense</span>
+        </a>
+        <button class="icon-button sidebar-close" id="close-sidebar" aria-label="Close navigation">
+          <span></span><span></span>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Workspace navigation">
+        <button class="nav-item nav-item-active" data-view="workspace">
+          <span class="nav-icon" aria-hidden="true">⌁</span> Workspace
+        </button>
+        <button class="nav-item" data-view="library">
+          <span class="nav-icon" aria-hidden="true">□</span> Video library
+        </button>
+      </nav>
+
+      <section class="collection-card" aria-labelledby="collection-heading">
+        <div class="eyebrow" id="collection-heading">Active collection</div>
+        <div class="collection-name" id="collection-name">Loading collection…</div>
+        <div class="collection-status" id="collection-status"><span class="status-dot"></span><span>Preparing</span></div>
+        <div class="collection-count" id="collection-count">Your sources will appear here.</div>
+        <button class="button button-secondary button-full" id="open-source-modal">Add sources</button>
+      </section>
+
+      <section class="source-list-wrap" aria-labelledby="sources-heading">
+        <div class="sidebar-section-title" id="sources-heading">Sources</div>
+        <div class="source-list" id="source-list"></div>
+      </section>
+
+      <p class="sidebar-note">Portfolio demo: custom collections are temporary and may reset after a period of inactivity or a deployment.</p>
+    </aside>
+
+    <div class="page">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="open-sidebar" aria-label="Open navigation"><span></span><span></span><span></span></button>
+        <div class="mobile-brand">VidSense</div>
+        <button class="text-button" id="top-add-source">Add sources</button>
+      </header>
+
+      <main class="main-content">
+        <section id="view-workspace">
+          <div class="welcome" id="welcome">
+            <p class="eyebrow accent">Video intelligence, without the busywork</p>
+            <h1>Turn a video collection into answers you can trust.</h1>
+            <p>Paste a YouTube video or playlist, then ask questions, get an overview, or jump straight to the moments that matter.</p>
+            <button class="button button-primary" id="welcome-add-source">Build a collection</button>
+          </div>
+
+          <div class="workspace hidden" id="workspace">
+            <div class="workspace-header">
+              <div>
+                <p class="eyebrow accent">Ask your collection</p>
+                <h1 id="workspace-title">What would you like to know?</h1>
+              </div>
+              <button class="button button-secondary desktop-add-source" id="workspace-add-source">Add sources</button>
+            </div>
+
+            <div class="notice hidden" id="collection-notice" role="status"></div>
+
+            <section class="composer-card" aria-label="Ask a question">
+              <label class="sr-only" for="question">Question about this collection</label>
+              <textarea id="question" rows="3" maxlength="2000" placeholder="Ask anything across your selected videos…"></textarea>
+              <div class="composer-footer">
+                <div class="quick-actions">
+                  <button class="action-button" data-mode="summary">Summarize collection</button>
+                  <button class="action-button" data-mode="highlights">Find highlights</button>
+                </div>
+                <button class="button button-primary" id="ask" data-mode="question">Ask question</button>
+              </div>
+            </section>
+
+            <div class="result hidden" id="result" aria-live="polite">
+              <div class="result-heading">
+                <div>
+                  <p class="eyebrow" id="result-kicker">Answer</p>
+                  <h2 id="result-title">Here’s what I found</h2>
+                </div>
+                <span class="researching hidden" id="researching"><span class="spinner"></span> Looking through your videos</span>
+              </div>
+              <article class="answer-card markdown" id="answer"></article>
+
+              <section class="sources-section">
+                <div class="section-heading">
+                  <div>
+                    <p class="eyebrow">Evidence</p>
+                    <h3>Watch the moments behind the answer</h3>
+                  </div>
+                </div>
+                <div class="source-cards" id="citations"></div>
+              </section>
+
+              <details class="details" id="details">
+                <summary>How this answer was prepared</summary>
+                <ol id="trajectory" class="trajectory"></ol>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-library" class="library-view hidden">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow accent">Your sources</p>
+              <h1>Video library</h1>
+              <p class="library-subtitle">Every video below contributes to the active collection.</p>
+            </div>
+            <button class="button button-primary" id="library-add-source">Add sources</button>
+          </div>
+          <div class="notice hidden" id="library-notice"></div>
+          <div class="video-grid" id="video-grid"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="source-modal" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="source-modal-title">
+      <button class="modal-close" id="close-source-modal" aria-label="Close source dialog">×</button>
+      <p class="eyebrow accent">Create a collection</p>
+      <h2 id="source-modal-title">Add YouTube sources</h2>
+      <p class="modal-copy">Paste one video, several video links, or a public playlist. We’ll combine their captions into one collection.</p>
+      <label for="collection-input">Collection name <span class="optional">optional</span></label>
+      <input id="collection-input" maxlength="80" placeholder="e.g. Product strategy research" />
+      <label for="source-input">YouTube links</label>
+      <textarea id="source-input" rows="7" placeholder="https://www.youtube.com/watch?v=…\nhttps://www.youtube.com/playlist?list=…"></textarea>
+      <p class="input-help">Use one link per line. Public and accessible unlisted playlists are supported; collections are limited to 50 videos.</p>
+      <p class="input-help">Custom collections are temporary in this portfolio demo and may reset after inactivity or a new deployment.</p>
+      <div class="modal-error hidden" id="source-error" role="alert"></div>
+      <div class="modal-actions">
+        <button class="button button-secondary" id="cancel-source">Cancel</button>
+        <button class="button button-primary" id="create-source">Build collection</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
