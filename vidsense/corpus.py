@@ -246,6 +246,10 @@ def build_corpus(
     sources: Optional[List[dict]] = None,
     warnings: Optional[List[str]] = None,
     progress=None,
+    transcript_loader=None,
+    video_saved=None,
+    cache_namespace: Optional[str] = None,
+    persist_cache: bool = True,
 ) -> Corpus:
     """Fetch transcripts for `specs` and build (or load) the cached corpus.
 
@@ -264,9 +268,9 @@ def build_corpus(
         raise RuntimeError(f"No valid YouTube videos were supplied for corpus '{name}'.")
 
     video_ids = [s["video_id"] for s in unique_specs]
-    cache_dir = config.CACHE_DIR / _cache_key(name, unique_specs)
+    cache_dir = config.CACHE_DIR / _cache_key(cache_namespace or name, unique_specs)
     legacy_cache_dir = config.CACHE_DIR / _legacy_cache_key(name, video_ids)
-    if not rebuild and not (cache_dir / "records.json").exists() and (legacy_cache_dir / "records.json").exists():
+    if persist_cache and not cache_namespace and not rebuild and not (cache_dir / "records.json").exists() and (legacy_cache_dir / "records.json").exists():
         # Keep the pre-built demo corpus usable in deployment images. New
         # customer collections always receive the richer source-aware key.
         cache_dir = legacy_cache_dir
@@ -275,7 +279,7 @@ def build_corpus(
     embeddings = config.get_embeddings()
 
     # --- fast path: load from cache ---
-    if not rebuild and meta_path.exists() and (faiss_path / "index.faiss").exists():
+    if persist_cache and not rebuild and meta_path.exists() and (faiss_path / "index.faiss").exists():
         if verbose:
             print(f"📦 Loading cached corpus '{name}' from {cache_dir}")
         payload = json.loads(meta_path.read_text(encoding="utf-8"))
@@ -313,9 +317,13 @@ def build_corpus(
                 progress({"phase": "fetching_transcript", "current": index, "total": len(video_ids), "video_id": vid})
             if verbose:
                 print(f"📥 Fetching transcript: {vid} ({titles[vid]})")
-            transcript = _fetch_transcript(vid)
+            transcript = transcript_loader(vid) if transcript_loader else None
+            if transcript is None:
+                transcript = _fetch_transcript(vid)
             if not transcript:
                 raise ValueError("empty transcript")
+            if sum(len(seg["text"]) for seg in transcript) > config.MAX_TRANSCRIPT_CHARS:
+                raise ValueError("Transcript exceeds the collection size limit.")
             spec = specs_by_id[vid]
             record = VideoRecord(
                 vid,
@@ -325,8 +333,13 @@ def build_corpus(
                 spec.get("source_kind", "manifest"),
                 spec.get("playlist_id"),
             )
+            chunks = _chunk_video(record)
+            if len(all_docs) + len(chunks) > config.MAX_CORPUS_CHUNKS:
+                raise ValueError("Transcript exceeds the collection size limit.")
+            if video_saved:
+                video_saved(record)
             videos[vid] = record
-            all_docs.extend(_chunk_video(record))
+            all_docs.extend(chunks)
         except Exception as e:  # captions disabled / unavailable / network
             diagnostic = f"{type(e).__name__}: {e}"
             reason = _public_transcript_error(e)
@@ -353,29 +366,30 @@ def build_corpus(
     store = FAISS.from_documents(all_docs, embeddings)
 
     # --- persist cache ---
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    store.save_local(str(faiss_path))
-    meta_path.write_text(
-        json.dumps(
-            {
-                "name": name,
-                "videos": {
-                    vid: {
-                        "title": r.title,
-                        "transcript": r.transcript,
-                        "source_url": r.source_url,
-                        "source_kind": r.source_kind,
-                        "playlist_id": r.playlist_id,
-                    }
-                    for vid, r in videos.items()
+    if persist_cache:
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        store.save_local(str(faiss_path))
+        meta_path.write_text(
+            json.dumps(
+                {
+                    "name": name,
+                    "videos": {
+                        vid: {
+                            "title": r.title,
+                            "transcript": r.transcript,
+                            "source_url": r.source_url,
+                            "source_kind": r.source_kind,
+                            "playlist_id": r.playlist_id,
+                        }
+                        for vid, r in videos.items()
+                    },
+                    "skipped": skipped,
+                    "sources": sources or [],
+                    "warnings": warnings or [],
                 },
-                "skipped": skipped,
-                "sources": sources or [],
-                "warnings": warnings or [],
-            }
-        ),
-        encoding="utf-8",
-    )
+            ),
+            encoding="utf-8",
+        )
     if verbose:
         print(f"✅ Corpus '{name}' ready: {len(videos)} videos, {len(skipped)} skipped")
 
@@ -388,6 +402,33 @@ def load_corpus(manifest_path: str | Path, rebuild: bool = False, verbose: bool 
     """Build/load a corpus from a manifest JSON file."""
     name, specs = _read_manifest(manifest_path)
     return build_corpus(name, specs, rebuild=rebuild, verbose=verbose)
+
+
+def restore_corpus(name: str, records: List[dict], skipped=None, sources=None, warnings=None) -> Corpus:
+    """Rebuild a local index from durable transcript data, without provider calls.
+
+    MongoDB stores plain records, never pickled FAISS objects supplied by users.
+    A process restart costs local embedding work but no transcript credits.
+    """
+    videos = {}
+    docs = []
+    if len(records) > config.MAX_PLAYLIST_VIDEOS:
+        raise ValueError("The saved collection exceeds the configured video limit.")
+    for data in records:
+        record = VideoRecord(
+            data["video_id"], data["title"], data["transcript"],
+            data.get("source_url", ""), data.get("source_kind", "video"), data.get("playlist_id"),
+        )
+        if sum(len(segment["text"]) for segment in record.transcript) > config.MAX_TRANSCRIPT_CHARS:
+            raise ValueError("The saved transcript exceeds the configured size limit.")
+        videos[record.video_id] = record
+        docs.extend(_chunk_video(record))
+        if len(docs) > config.MAX_CORPUS_CHUNKS:
+            raise ValueError("The saved collection exceeds the configured index size limit.")
+    if not docs:
+        raise ValueError("No saved transcripts are available for this collection.")
+    return Corpus(name, videos, FAISS.from_documents(docs, config.get_embeddings()),
+                  skipped or [], sources or [], warnings or [])
 
 
 def corpus_from_urls(name: str, urls: List[str], rebuild: bool = False, verbose: bool = True) -> Corpus:

@@ -58,6 +58,32 @@ def _env_float(name: str, default: float, minimum: float = 1.0) -> float:
     except ValueError:
         return default
 
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    return os.getenv(name, str(default)).strip().lower() in {"1", "true", "yes"}
+
+
+# Accounts are disabled until MongoDB is configured; the starter demo stays
+# public. Secrets are read at runtime and must never enter the frontend config.
+MONGODB_URI = os.getenv("MONGODB_URI", "").strip()
+MONGODB_DATABASE = os.getenv("MONGODB_DATABASE", "vidsense").strip()
+APP_URL = os.getenv("VIDSENSE_APP_URL", "http://127.0.0.1:8000").rstrip("/")
+AUTH_COOKIE_SECURE = APP_URL.startswith("https://")
+AUTH_COOKIE_NAME = "__Host-vidsense_session" if AUTH_COOKIE_SECURE else "vidsense_session"
+AUTH_SESSION_SECONDS = _env_int("VIDSENSE_AUTH_SESSION_SECONDS", 604800, minimum=300)
+SMTP_HOST = os.getenv("SMTP_HOST", "").strip()
+SMTP_PORT = _env_int("SMTP_PORT", 587)
+SMTP_USERNAME = os.getenv("SMTP_USERNAME", "").strip()
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+SMTP_FROM = os.getenv("SMTP_FROM", "VidSense <noreply@localhost>").strip()
+SMTP_STARTTLS = _env_bool("SMTP_STARTTLS", True)
+SMTP_SSL = _env_bool("SMTP_SSL")
+ENABLE_DEVELOPER_API = _env_bool("VIDSENSE_ENABLE_DEVELOPER_API")
+MAX_COLLECTIONS_PER_USER = _env_int("VIDSENSE_MAX_COLLECTIONS_PER_USER", 5)
+MAX_TRANSCRIPT_CHARS = _env_int("VIDSENSE_MAX_TRANSCRIPT_CHARS", 250000)
+MAX_CORPUS_CHUNKS = _env_int("VIDSENSE_MAX_CORPUS_CHUNKS", 3000)
+JOB_LEASE_SECONDS = _env_int("VIDSENSE_JOB_LEASE_SECONDS", 300, minimum=120)
+
 # Customer-facing ingestion safeguard. A playlist can otherwise turn a single
 # click into hours of transcript fetching and a very large local index. It is
 # intentionally configurable for self-hosted installations.

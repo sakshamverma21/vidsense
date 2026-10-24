@@ -85,10 +85,11 @@ current Korea Central environment instead of attempting to create another one:
 az containerapp up --name vidsense --resource-group vidsense-rg --source . --ingress external --target-port 8000
 ```
 
-> The site loads with a baked-in starter collection. Visitors can add YouTube
-> videos or public playlists during a running session; active collections are
-> process-local, so they must be added again after a deployment or scale-to-zero
-> restart. **Research** will error until we add the keys in the next step.
+> The site loads with a prepared starter collection. Visitor collections now
+> require MongoDB-backed accounts and verified email; configure MongoDB and SMTP
+> using [the account deployment guide](docs/accounts-and-mongodb.md). Without
+> these settings the deployment runs in demo-only mode. Research requires the
+> model-provider keys in the next step.
 
 ## 6. Add your API keys (as secrets, not baked into the image)
 
@@ -118,7 +119,8 @@ az containerapp secret set --name vidsense --resource-group vidsense-rg --secret
 az containerapp update --name vidsense --resource-group vidsense-rg --set-env-vars VIDSENSE_PROVIDER=groq VIDSENSE_GROQ_MODEL=openai/gpt-oss-20b VIDSENSE_TRANSCRIPT_PROVIDER=auto GROQ_API_KEY=secretref:groq-key TAVILY_API_KEY=secretref:tavily-key SUPADATA_API_KEY=secretref:supadata-key
 ```
 Replace the placeholders with the rotated values from your local `.env`.
-The app restarts with the keys → **research and visitor-added sources now work**.
+The app restarts with the keys and demo research becomes available. Custom
+imports also require the MongoDB and SMTP configuration described above.
 
 To use a playlist size other than the default 50 videos, add
 `VIDSENSE_MAX_PLAYLIST_VIDEOS=YOUR_LIMIT` to the same `--set-env-vars` command.
@@ -128,15 +130,18 @@ indexing a representative playlist.
 
 ### Keep the portfolio deployment inexpensive and session-safe
 
-Custom collections live in one application process, so allow scale-to-zero but
-never scale out to multiple replicas:
+Custom collections are saved in MongoDB, while indexes and ingestion workers
+remain local to one process. Allow scale-to-zero but keep one maximum replica
+until ingestion is moved into a durable worker queue:
 
 ```powershell
 az containerapp update --name vidsense --resource-group vidsense-rg --min-replicas 0 --max-replicas 1
 ```
 
 The starter corpus survives scale-to-zero because it is baked into the image.
-Visitor-created collections are temporary and must be recreated after a restart.
+Visitor collections are restored from MongoDB; rebuilding the local index can
+take time after a restart. Interrupted imports can be retried after their lease
+expires, reusing the videos already saved to MongoDB.
 
 ## 7. Get your public URL
 

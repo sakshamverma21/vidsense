@@ -19,9 +19,10 @@ PATTERNS = [
     re.compile(r"AIza[0-9A-Za-z_-]{20,}"),
     re.compile(r"gsk_[0-9A-Za-z_-]{20,}"),
     re.compile(r"tvly-[0-9A-Za-z_-]{20,}"),
+    re.compile(r"mongodb(?:\+srv)?://[^\s:/]+:[^\s@]+@"),
     re.compile(
-        r"(?:GOOGLE_API_KEY|GROQ_API_KEY|TAVILY_API_KEY|SUPADATA_API_KEY)\s*=\s*"
-        r"(?!(?:your_|YOUR_|secretref:))[^\s#]+"
+        r"(?:GOOGLE_API_KEY|GROQ_API_KEY|TAVILY_API_KEY|SUPADATA_API_KEY|SMTP_PASSWORD)\s*=\s*"
+        r"(?!(?:your_|YOUR_|secretref:|os\.getenv\(|\"\"|''))[^\s#]+"
     ),
 ]
 

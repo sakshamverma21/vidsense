@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -33,6 +33,24 @@
         </button>
       </nav>
 
+      <section class="account-card" aria-labelledby="account-heading">
+        <div class="eyebrow" id="account-heading">Your account</div>
+        <div id="account-summary" class="account-summary">Checking account availability…</div>
+        <div class="account-actions">
+          <button class="text-button hidden" id="sidebar-account">Sign in</button>
+          <button class="text-button hidden" id="sign-out">Sign out</button>
+        </div>
+      </section>
+
+      <section class="saved-collections" aria-labelledby="saved-heading">
+        <div class="section-heading">
+          <div class="sidebar-section-title" id="saved-heading">Collections</div>
+          <button class="text-button hidden" id="refresh-collections" aria-label="Refresh saved collections">Refresh</button>
+        </div>
+        <div id="collection-list" class="collection-list"></div>
+        <p id="collections-message" class="input-help" role="status"></p>
+      </section>
+
       <section class="collection-card" aria-labelledby="collection-heading">
         <div class="eyebrow" id="collection-heading">Active collection</div>
         <div class="collection-name" id="collection-name">Loading collection…</div>
@@ -46,18 +64,30 @@
         <div class="source-list" id="source-list"></div>
       </section>
 
-      <p class="sidebar-note">Portfolio demo: custom collections are temporary and may reset after a period of inactivity or a deployment.</p>
+      <p class="sidebar-note" id="sidebar-note">The public starter collection is available to everyone.</p>
     </aside>
 
     <div class="page">
       <header class="topbar">
         <button class="icon-button menu-button" id="open-sidebar" aria-label="Open navigation"><span></span><span></span><span></span></button>
         <div class="mobile-brand">VidSense</div>
+        <button class="text-button hidden" id="top-account">Sign in</button>
         <button class="text-button" id="top-add-source">Add sources</button>
       </header>
 
       <main class="main-content">
+        <div class="notice" id="account-notice" role="status">
+          <span id="account-notice-text">Checking account availability. You can explore the starter demo.</span>
+          <button class="text-button hidden" id="retry-session">Retry connection</button>
+          <button class="text-button hidden" id="retry-logout">Retry sign out</button>
+        </div>
+        <div class="notice hidden" id="workspace-notice" role="status"></div>
+        <div class="collection-recovery hidden" id="collection-recovery">
+          <button class="button button-secondary" id="reload-collection">Reload collection</button>
+          <button class="button button-primary hidden" id="retry-collection">Retry preparation</button>
+        </div>
         <section id="view-workspace">
+          <div class="notice hidden" id="collection-notice" role="status"></div>
           <div class="welcome" id="welcome">
             <p class="eyebrow accent">Video intelligence, without the busywork</p>
             <h1>Turn a video collection into answers you can trust.</h1>
@@ -73,8 +103,6 @@
               </div>
               <button class="button button-secondary desktop-add-source" id="workspace-add-source">Add sources</button>
             </div>
-
-            <div class="notice hidden" id="collection-notice" role="status"></div>
 
             <section class="composer-card" aria-label="Ask a question">
               <label class="sr-only" for="question">Question about this collection</label>
@@ -132,25 +160,81 @@
     </div>
   </div>
 
-  <div class="modal-backdrop hidden" id="source-modal" role="presentation">
-    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="source-modal-title">
+  <dialog class="modal-backdrop" id="source-modal" aria-labelledby="source-modal-title" aria-describedby="source-modal-copy">
+    <section class="modal">
       <button class="modal-close" id="close-source-modal" aria-label="Close source dialog">×</button>
       <p class="eyebrow accent">Create a collection</p>
       <h2 id="source-modal-title">Add YouTube sources</h2>
-      <p class="modal-copy">Paste one video, several video links, or a public playlist. We’ll combine their captions into one collection.</p>
-      <label for="collection-input">Collection name <span class="optional">optional</span></label>
-      <input id="collection-input" maxlength="80" placeholder="e.g. Product strategy research" />
-      <label for="source-input">YouTube links</label>
-      <textarea id="source-input" rows="7" placeholder="https://www.youtube.com/watch?v=…\nhttps://www.youtube.com/playlist?list=…"></textarea>
-      <p class="input-help">Use one link per line. Public and accessible unlisted playlists are supported; collections are limited to 50 videos.</p>
-      <p class="input-help">Custom collections are temporary in this portfolio demo and may reset after inactivity or a new deployment.</p>
-      <div class="modal-error hidden" id="source-error" role="alert"></div>
-      <div class="modal-actions">
-        <button class="button button-secondary" id="cancel-source">Cancel</button>
-        <button class="button button-primary" id="create-source">Build collection</button>
+      <p class="modal-copy" id="source-modal-copy">Paste one video, several video links, or a public playlist. We’ll combine their captions into one collection saved to your account.</p>
+      <form id="source-form">
+        <label for="collection-input">Collection name <span class="optional">optional</span></label>
+        <input id="collection-input" maxlength="80" placeholder="e.g. Product strategy research" />
+        <label for="source-input">YouTube links</label>
+        <textarea id="source-input" rows="7" required placeholder="https://www.youtube.com/watch?v=…\nhttps://www.youtube.com/playlist?list=…" aria-describedby="source-limits"></textarea>
+        <p class="input-help" id="source-limits">Use one link per line. Public and accessible unlisted playlists are supported. Checking the configured video limit…</p>
+        <div class="modal-error hidden" id="source-error" role="alert"></div>
+        <div class="modal-actions">
+          <button type="button" class="button button-secondary" id="cancel-source">Cancel</button>
+          <button type="submit" class="button button-primary" id="create-source">Build collection</button>
+        </div>
+      </form>
+    </section>
+  </dialog>
+
+  <dialog class="modal-backdrop" id="auth-modal" aria-labelledby="auth-title" aria-describedby="auth-copy">
+    <section class="modal auth-modal">
+      <button class="modal-close" id="close-auth-modal" aria-label="Close account dialog">×</button>
+      <p class="eyebrow accent">Your VidSense account</p>
+      <h2 id="auth-title" tabindex="-1">Sign in</h2>
+      <p class="modal-copy" id="auth-copy"></p>
+      <p class="notice warning hidden" id="auth-availability"></p>
+      <div class="notice hidden" id="auth-message" role="status" tabindex="-1"></div>
+      <div class="modal-error hidden" id="auth-error" role="alert"></div>
+      <form id="auth-form">
+        <fieldset id="auth-fields">
+          <div id="auth-name-field" class="hidden">
+            <label for="auth-name">Name <span class="optional">optional</span></label>
+            <input id="auth-name" name="name" maxlength="80" autocomplete="name" />
+          </div>
+          <div id="auth-email-field">
+            <label for="auth-email">Email address</label>
+            <input id="auth-email" name="email" type="email" maxlength="320" autocomplete="email" autocapitalize="none" spellcheck="false" required />
+          </div>
+          <div id="auth-password-field">
+            <label for="auth-password">Password</label>
+            <input id="auth-password" name="password" type="password" minlength="15" maxlength="128" autocomplete="current-password" aria-describedby="password-help" required />
+            <p class="input-help" id="password-help">Use 15–128 characters. Spaces and passphrases are welcome.</p>
+          </div>
+          <div id="auth-confirm-field" class="hidden">
+            <label for="auth-confirm">Confirm password</label>
+            <input id="auth-confirm" type="password" minlength="15" maxlength="128" autocomplete="new-password" />
+          </div>
+          <div class="modal-actions"><button class="button button-primary" id="auth-submit" type="submit">Sign in</button></div>
+        </fieldset>
+      </form>
+      <div class="auth-nav" aria-label="Account actions">
+        <button type="button" class="text-button" data-auth-mode="login">Sign in</button>
+        <button type="button" class="text-button" data-auth-mode="register">Create account</button>
+        <button type="button" class="text-button" data-auth-mode="forgot">Forgot password?</button>
+        <button type="button" class="text-button" data-auth-mode="resend">Resend verification email</button>
+        <button type="button" class="text-button hidden" id="refresh-account">Check verification status</button>
       </div>
     </section>
-  </div>
+  </dialog>
+
+  <dialog class="modal-backdrop" id="delete-modal" aria-labelledby="delete-title" aria-describedby="delete-copy">
+    <section class="modal">
+      <button class="modal-close" id="close-delete-modal" aria-label="Close delete dialog">×</button>
+      <p class="eyebrow accent">Saved collection</p>
+      <h2 id="delete-title">Delete collection?</h2>
+      <p class="modal-copy" id="delete-copy"></p>
+      <div class="modal-error hidden" id="delete-error" role="alert"></div>
+      <div class="modal-actions">
+        <button class="button button-secondary" id="cancel-delete">Keep collection</button>
+        <button class="button button-danger" id="confirm-delete">Delete collection</button>
+      </div>
+    </section>
+  </dialog>
 
   <script src="/app.js"></script>
 </body>

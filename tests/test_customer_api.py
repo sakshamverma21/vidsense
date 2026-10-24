@@ -4,6 +4,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 import api
+from tests.mongo_support import MongoApiTestCase
 from vidsense.actions import action_question
 from vidsense.corpus import Corpus, VideoRecord, _cache_key
 
@@ -31,11 +32,9 @@ class InlineThread:
         self.target(*self.args)
 
 
-class CustomerApiTests(unittest.TestCase):
+class CustomerApiTests(MongoApiTestCase):
     def setUp(self):
-        api._state["sessions"].clear()
-        api._rate_buckets.clear()
-        self.client = TestClient(api.app)
+        super().setUp()
 
     def test_action_prompts_select_customer_modes(self):
         self.assertIn("overview", action_question("summary").lower())
@@ -48,7 +47,7 @@ class CustomerApiTests(unittest.TestCase):
         self.assertNotEqual(_cache_key("collection", first), _cache_key("collection", second))
 
     def test_collection_lifecycle_and_scoped_research(self):
-        def complete_job(corpus_id):
+        def complete_job(corpus_id, _snapshot=None):
             session = api._state["sessions"][corpus_id]
             session["corpus"] = Corpus(
                 "Test collection",
@@ -57,6 +56,7 @@ class CustomerApiTests(unittest.TestCase):
             )
             session["status"] = "ready"
             session["progress"] = {"phase": "ready", "current": 1, "total": 1}
+            api._save_session(session)
 
         with patch.object(api, "_run_corpus_job", complete_job), patch.object(api, "JobThread", InlineThread), patch.object(api, "_agent_for", return_value=FakeAgent()), patch.object(api, "_baseline_for", return_value=FakeAgent()):
             created = self.client.post("/api/corpora", json={"name": "Test collection", "inputs": ["https://youtu.be/abc12345678"]})

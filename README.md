@@ -18,10 +18,11 @@ single-shot RAG baseline.
 > **Gemini** / **Groq** LLMs (pluggable provider), a **FastAPI + SSE** backend with a
 > custom **HTML/CSS/JS** frontend, and a from-scratch eval harness.
 
-> **Portfolio deployment note:** the bundled starter corpus is always available.
-> Collections created by visitors are intentionally temporary and may reset
-> after inactivity, scale-to-zero, or a new deployment. Durable multi-user
-> storage is described in the production roadmap below.
+> **Account upgrade:** the public starter collection needs no login. Configure
+> MongoDB and SMTP to enable custom email/password accounts, email verification,
+> password recovery, and private saved collections. FAISS indexes rebuild from
+> saved transcripts after restarts. See [account setup](docs/accounts-and-mongodb.md).
+> These branch changes are separate from the currently deployed portfolio demo.
 
 ---
 
@@ -55,6 +56,9 @@ Corpus: multi-video transcripts → timestamped chunks → one FAISS store (meta
 | Module | Responsibility |
 |---|---|
 | `vidsense/corpus.py` | Ingest transcripts, build a metadata-rich, disk-cached FAISS store |
+| `vidsense/auth.py` | Email/password accounts, verification, recovery, opaque cookie sessions |
+| `vidsense/database.py` | MongoDB connection, indexes, shared request-limit counters |
+| `vidsense/storage.py` | Owner-scoped collection and transcript persistence |
 | `vidsense/tools.py` | The five tools the agent plans over (each returns grounded citations) |
 | `vidsense/agent.py` | The LangGraph research agent + trajectory logging + token/cost tracking |
 | `vidsense/citations.py` | Citation formatting + LLM claim-verification (hallucination control) |
@@ -148,25 +152,33 @@ embedding batch size of 16 to stay within small container memory limits. Both
 are configurable through `VIDSENSE_SUPADATA_MIN_INTERVAL_SECONDS` and
 `VIDSENSE_EMBEDDING_BATCH_SIZE`.
 
-Collections are process-local and expire after two hours of inactivity by
-default. Their cached transcripts/indexes are reused on disk, but the active
-collection is not restored after the API process restarts or an Azure instance
-scales to zero. Add the sources again if that happens.
+Custom collections require a signed-in, email-verified account. MongoDB stores
+their metadata and transcripts; reopening after a restart rebuilds the local
+FAISS index without fetching transcripts again. Idle in-memory indexes expire
+after two hours by default, without deleting the MongoDB collections. The
+starter collection stays public. Without MongoDB configuration, only the demo
+is available. See [local and Atlas setup](docs/accounts-and-mongodb.md).
 
 ### Customer API
 
 ```text
 POST /api/corpora                  # start a collection from { inputs, name? }
+GET  /api/corpora                  # list the signed-in user's collections
 GET  /api/corpora/{corpus_id}      # poll preparation/status
+DELETE /api/corpora/{corpus_id}    # delete the owner's collection and transcripts
+POST /api/corpora/{corpus_id}/retry # retry interrupted/failed preparation
 POST /api/research                 # question/summary/highlights for corpus_id
-GET  /api/research/stream          # streaming equivalent, with corpus_id + mode
+POST /api/research/stream          # JSON body, streams events without query text in URL
 GET  /api/live                     # liveness probe
 GET  /api/ready                    # readiness/configuration probe
 ```
 
 `mode` is `question`, `summary`, or `highlights`. The latter two power the
 workspace action buttons and return the same citation-ready response shape as a
-question.
+question. Mutations require the `X-VidSense-Request: 1` header and browser
+requests must originate from `VIDSENSE_APP_URL`. `/api/eval` and the legacy GET
+stream are disabled unless `VIDSENSE_ENABLE_DEVELOPER_API=true` is explicitly
+set for a private developer installation.
 
 **Or the built-in Streamlit UI** (same features, simpler):
 ```bash
@@ -235,11 +247,12 @@ visitor collections are process-local.
 
 ## Production roadmap
 
-The portfolio deployment deliberately favors a small, inspectable architecture.
-A durable multi-user version would replace process-local sessions and per-container
-FAISS indexes with PostgreSQL + pgvector, associate collections with authenticated
-users, and move playlist/transcript ingestion to a durable queue-backed worker.
-That would allow safe horizontal scaling and preserve collections across revisions.
+Accounts and saved transcript data now use MongoDB, while FAISS remains a local
+retrieval index. Keep one API replica during this increment: preparation still
+runs in background threads. Interrupted jobs become retryable after their lease
+expires. The next rollout steps are a durable worker queue, global provider-credit
+budgets, backup/restore validation, concurrency testing, and production monitoring.
+Do not treat this increment alone as readiness for unrestricted public access.
 
 ## Evaluation methodology
 
